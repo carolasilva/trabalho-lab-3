@@ -15,7 +15,6 @@ public class ArquivoBinarioAcessoAleatorio {
 	RandomAccessFile arquivoAcessoAleatorio;
 	File arquivo;
 	ArquivoIndice arquivoIndice;
-	private final int TAMANHO_VETOR = 4;
 	
 	
 	private Long posicao = 0L;

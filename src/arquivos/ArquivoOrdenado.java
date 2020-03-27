@@ -18,10 +18,10 @@ public class ArquivoOrdenado {
 	public ArquivoOrdenado(String nomeArquivo) {
 		this.nomeArquivo = nomeArquivo;
 		file = new File(nomeArquivo);
-
+		boolean append = file.exists();
 		try {
-			fos = new FileOutputStream(file, false);
-			outputFile = new AppendableObjectOutputStream(fos, false);
+			fos = new FileOutputStream(file, append);
+			outputFile = new AppendableObjectOutputStream(fos, append);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
