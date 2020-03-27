@@ -16,11 +16,13 @@ aleatório;
 o Após a criação deste arquivo, permitir a busca e exibição dos dados de um aluno por sua posição
 no arquivo.
 - Criar um índice simples para este arquivo (sugere-se índice baseado na matrícula);
-o O índice pode ser criado com o auxílio do uso de estruturas de memória principal. No entanto, ao
+  - O índice pode ser criado com o auxílio do uso de estruturas de memória principal. No entanto, ao
 final da execução do programa, este índice deve ser gravado em arquivo para que, na próxima
 execução do programa, ele apenas seja lido, sem necessidade de recriação.
-o Com o índice criado, deve ser permitida a busca e exibição dos dados de um aluno por sua
+  - Com o índice criado, deve ser permitida a busca e exibição dos dados de um aluno por sua
 matrícula (ou outro atributo, caso você assim escolha)
 - No momento pedido pelo usuário, exibir um relatório em ordem alfabética dos alunos, paginando os
 registros de 20 em 20. O relatório também pode ser exibido, a pedido do usuário, a partir de uma posição
 específica do arquivo.
+  - Para esta tarefa, você precisará realizar a ordenação dos dados do arquivo em memória
+secundária e, posteriormente, refazer seu índice. 
