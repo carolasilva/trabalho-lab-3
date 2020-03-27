@@ -2,8 +2,13 @@ package models;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.Serializable;
 
-public class Aluno {
+public class Aluno implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String nome;
 	private long matricula;
 	private double nota;

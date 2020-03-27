@@ -4,14 +4,20 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.List;
 
 import models.Aluno;
 import models.LinhaDoIndex;
+import models.VetorParaOrdenacao;
 
 public class ArquivoBinarioAcessoAleatorio {
 	RandomAccessFile arquivoAcessoAleatorio;
 	File arquivo;
 	ArquivoIndice arquivoIndice;
+	private final int TAMANHO_VETOR = 4;
+	
+	
 	private Long posicao = 0L;
 	
 	public ArquivoBinarioAcessoAleatorio(String nomeArquivo) {
