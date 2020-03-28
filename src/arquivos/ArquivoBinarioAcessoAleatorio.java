@@ -24,6 +24,19 @@ public class ArquivoBinarioAcessoAleatorio {
 		arquivoIndice = new ArquivoIndice("indice.dat");
 	}
 	
+	public ArquivoBinarioAcessoAleatorio(String nomeArquivo, boolean apagarExistente) {
+		if (apagarExistente) {
+			File arquivoParApagar = new File(nomeArquivo);
+			arquivoParApagar.delete();			
+		}
+		this.arquivo = new File(nomeArquivo);
+		arquivoIndice = new ArquivoIndice("indice.dat");
+	}
+	
+	public void apagarArquivo() {
+		arquivo.delete();
+	}
+	
 	public void adicionarAlunoNoArquivo(Aluno aluno) {
 		try {
 			this.arquivoAcessoAleatorio = new RandomAccessFile(arquivo, "rw");

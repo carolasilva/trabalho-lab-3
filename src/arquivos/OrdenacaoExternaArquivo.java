@@ -10,6 +10,7 @@ public class OrdenacaoExternaArquivo {
 	private static int quantidadeTotalDeArquivos = 4;
 	
 	public static void ordenarArquivoPorOrdemAlfabética(ArquivoBinarioAcessoAleatorio arquivo) {
+		posicaoNoArquivoOriginal = 0;
 		VetorParaOrdenacao[] vetor = inicializaVetor();
 		vetor = preencheVetorCompleto(vetor, arquivo);
 		String nomeArquivo = "arquivo";
@@ -18,10 +19,10 @@ public class OrdenacaoExternaArquivo {
 		
 		do {
 
-			arquivoTemporario = new ArquivoBinarioAcessoAleatorio(nomeArquivo + quantidadeDeArquivos + ".dat");
+			arquivoTemporario = new ArquivoBinarioAcessoAleatorio(nomeArquivo + quantidadeDeArquivos + ".dat", false);
 			while (aindaExisteMaior(vetor)) {
 				vetor = preencheVetorCompleto(vetor, arquivo);
-				imprimeVetor(vetor);
+				//imprimeVetor(vetor);
 				vetor = colocaMenorEncontradoNoArquivoAberto(arquivoTemporario, vetor);
 			}
 	
@@ -43,10 +44,9 @@ public class OrdenacaoExternaArquivo {
 			System.out.println("--------------------------------------------------------");
 		}
 		
-		arquivoTemporario = new ArquivoBinarioAcessoAleatorio("arquivo1.dat");
-		System.out.println("ALUNO 3 DO ARQUIVO 1: " + arquivoTemporario.procurarAlunoPorPosicaoNoArquivo(10));
-		
-		//intercalaArquivos("arquivo1.dat", "arquivo2.dat", "arquivo5.dat");
+		intercalaArquivos("arquivo1.dat", "arquivo2.dat", "arquivo5.dat");
+		intercalaArquivos("arquivo3.dat", "arquivo4.dat", "arquivo6.dat");
+		intercalaArquivos("arquivo5.dat", "arquivo6.dat", "arquivo1.dat");
 		
 	}
 
@@ -67,38 +67,49 @@ public class OrdenacaoExternaArquivo {
 	}
 
 	private static void intercalaArquivos(String nomeArquivo1, String nomeArquivo2, String nomeArquivoSaida) {
-		ArquivoOrdenado arquivo1 = new ArquivoOrdenado(nomeArquivo1);
-		ArquivoOrdenado arquivo2 = new ArquivoOrdenado(nomeArquivo2);
-		ArquivoOrdenado arquivoSaida = new ArquivoOrdenado(nomeArquivoSaida);
+		ArquivoBinarioAcessoAleatorio arquivo1 = new ArquivoBinarioAcessoAleatorio(nomeArquivo1);
+		ArquivoBinarioAcessoAleatorio arquivo2 = new ArquivoBinarioAcessoAleatorio(nomeArquivo2);
+		ArquivoBinarioAcessoAleatorio arquivoSaida = new ArquivoBinarioAcessoAleatorio(nomeArquivoSaida, true);
 		
-		Aluno aluno1 = arquivo1.buscaPorPosicao(0);
-		Aluno aluno2 = arquivo2.buscaPorPosicao(0);
+		Aluno aluno1 = arquivo1.procurarAlunoPorPosicaoNoArquivo(0);
+		Aluno aluno2 = arquivo2.procurarAlunoPorPosicaoNoArquivo(0);
 		
-		Aluno alunoAntigo1 = aluno1;
-		Aluno alunoAntigo2 = aluno2;
-		
-		do {
+		int posicaoArquivo1 = 0;
+		int posicaoArquivo2 = 0;
+		int i=0;
+		while (aluno1 != null || aluno2 != null) {
 			do {
 				
-				if (aluno1.getNome().compareTo(aluno2.getNome()) < 0 && (aluno1.getMatricula() != -1)) {
-					alunoAntigo1 = aluno1;
-					arquivoSaida.add(aluno1);
-					aluno1 = arquivo1.buscaProximo(alunoAntigo1);
+				if (aluno2 == null || (aluno1.getNome().compareTo(aluno2.getNome()) < 0 && (aluno1.getMatricula() != -1)) || aluno2.getMatricula() == -1) {
+					arquivoSaida.adicionarAlunoNoArquivo(aluno1);
+					posicaoArquivo1++;
+					aluno1 = arquivo1.procurarAlunoPorPosicaoNoArquivo(posicaoArquivo1);
 				} else if (aluno2.getMatricula() != -1){
-					alunoAntigo2 = aluno2;
-					arquivoSaida.add(aluno2);
-					aluno2 = arquivo2.buscaProximo(alunoAntigo2);
+					arquivoSaida.adicionarAlunoNoArquivo(aluno2);
+					posicaoArquivo2++;
+					aluno2 = arquivo2.procurarAlunoPorPosicaoNoArquivo(posicaoArquivo2);
 				}
 				
 				
-			} while (aluno1.getMatricula() != -1 && aluno2.getMatricula() != -1);
+			} while ((aluno1 != null && aluno1.getMatricula() != -1) || (aluno2.getMatricula() != -1));
 
-			arquivoSaida.add(new Aluno(";", -1L, -1.0));
 			
-		} while (aluno1 != null && aluno2 != null);
+			posicaoArquivo1++;
+			posicaoArquivo2++;
+			aluno1 = arquivo1.procurarAlunoPorPosicaoNoArquivo(posicaoArquivo1);
+			aluno2 = arquivo2.procurarAlunoPorPosicaoNoArquivo(posicaoArquivo2);
+			arquivoSaida.adicionarAlunoNoArquivo(new Aluno(";", -1L, -1.0));
+			i++;
+			if (i == 20)
+				System.out.println("PROCESSANDO");
+				
+			
+		} 
 		
 		System.out.println("ARQUIVO SAIDA");
-		arquivoSaida.imprimeTodos();
+		arquivoSaida.imprimirTodos();
+		arquivo1.apagarArquivo();
+		arquivo2.apagarArquivo();
 	}
 
 	private static VetorParaOrdenacao[] retiraAsteriscosDoVetor(VetorParaOrdenacao[] vetor) {
