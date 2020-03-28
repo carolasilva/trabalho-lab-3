@@ -2,8 +2,13 @@ package models;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.Serializable;
 
-public class Aluno {
+public class Aluno implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String nome;
 	private long matricula;
 	private double nota;
@@ -11,7 +16,9 @@ public class Aluno {
     public static final int DATASIZE = 56; //40 bytes (String 20 caracteres) + 8 bytes (long) + 8 bytes double
 	
 	public Aluno(String nome, long matricula, double nota) {
-		this.nome = nome;
+		StringBuilder finalName = new StringBuilder(nome);
+		finalName.setLength(NAMESIZE);
+		this.nome = finalName.toString();
 		this.matricula = matricula;
 		this.nota = nota;
 	}
@@ -67,4 +74,28 @@ public class Aluno {
         Aluno aluno = new Aluno(nome, matricula, nota);
         return aluno;
     }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (matricula ^ (matricula >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Aluno other = (Aluno) obj;
+		if (matricula != other.matricula)
+			return false;
+		return true;
+	}
+	 
+	 
 }
