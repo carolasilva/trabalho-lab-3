@@ -11,15 +11,16 @@ public class OrdenacaoExternaArquivo {
 	
 	public static void ordenarArquivoPorOrdemAlfabética(ArquivoBinarioAcessoAleatorio arquivo) {
 		VetorParaOrdenacao[] vetor = inicializaVetor();
+		vetor = preencheVetorCompleto(vetor, arquivo);
 		String nomeArquivo = "arquivo";
 		int quantidadeDeArquivos = 1;
 		ArquivoOrdenado arquivoTemporario;
 		int i = 0;
-
+		
 		do {
 
 			arquivoTemporario = new ArquivoOrdenado(nomeArquivo + quantidadeDeArquivos + ".dat");
-			while (aindaExisteMaior(vetor) && !vetorETodoNulo(vetor)) {
+			while (aindaExisteMaior(vetor)) {
 				vetor = preencheVetorCompleto(vetor, arquivo);
 				vetor = colocaMenorEncontradoNoArquivoAberto(arquivoTemporario, vetor);
 			}
@@ -31,11 +32,11 @@ public class OrdenacaoExternaArquivo {
 				
 			} else
 				quantidadeDeArquivos++;
-			
-			
+			System.out.println("LENGTH: " + arquivo.arquivo.length());
+			System.out.println("LENGTH DO NOSSO: " + posicaoNoArquivoOriginal * Aluno.DATASIZE);
 			vetor = retiraAsteriscosDoVetor(vetor);
-			System.out.println();
-		} while (!vetorETodoNulo(vetor));
+			
+		} while (arquivo.arquivo.length() > posicaoNoArquivoOriginal * Aluno.DATASIZE);
 		
 		
 		for (int j=1; j<5; j++) {
@@ -46,29 +47,11 @@ public class OrdenacaoExternaArquivo {
 		}
 	}
 
-	private static boolean vetorETodoNulo(VetorParaOrdenacao[] vetor) {
-		for (int i=0; i<TAMANHO_VETOR; i++)
-			if (vetor[i].getAluno() != null) 
-				return false;
-		return true;
-	}
-
 	private static VetorParaOrdenacao[] retiraAsteriscosDoVetor(VetorParaOrdenacao[] vetor) {
 		for (int i=0; i<TAMANHO_VETOR; i++) {
 			vetor[i].setMenor(false);
 		}
 		return vetor;
-	}
-
-	private static void imprimeVetor(VetorParaOrdenacao[] vetor) {
-		System.out.println("-------------------------------------");
-		for (int i=0; i<TAMANHO_VETOR; i++) {
-			String asterisco = "";
-			if (vetor[i].isMenor()) asterisco = "*";
-			System.out.println(vetor[i].getNome() + ": " + asterisco);
-		}
-		System.out.println("-------------------------------------");
-		
 	}
 
 	private static VetorParaOrdenacao[] apagaAlunoAdicionadoNoArquivoDoVetor(VetorParaOrdenacao[] vetor,
@@ -129,6 +112,8 @@ public class OrdenacaoExternaArquivo {
 				Aluno aluno = arquivo.procurarAlunoPorPosicaoNoArquivo(posicaoNoArquivoOriginal);
 				nomes[i].setAluno(aluno);
 				posicaoNoArquivoOriginal++;
+				if (aluno == null)
+					nomes[i].setMenor(true);
 			}
 		}
 		return nomes;
