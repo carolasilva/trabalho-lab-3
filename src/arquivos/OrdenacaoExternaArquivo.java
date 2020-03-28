@@ -17,6 +17,11 @@ public class OrdenacaoExternaArquivo {
 		int quantidadeDeArquivos = 1;
 		ArquivoBinarioAcessoAleatorio arquivoTemporario;
 		
+		for (int j=0; j<quantidadeTotalDeArquivos; j++) {
+			arquivoTemporario = new ArquivoBinarioAcessoAleatorio(nomeArquivo + j + ".dat", true);
+			arquivoTemporario.apagarArquivo();
+		}
+		
 		do {
 
 			arquivoTemporario = new ArquivoBinarioAcessoAleatorio(nomeArquivo + quantidadeDeArquivos + ".dat", false);
