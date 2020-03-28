@@ -37,17 +37,17 @@ public class OrdenacaoExternaArquivo {
 			
 		} while (arquivo.arquivo.length() > posicaoNoArquivoOriginal * Aluno.DATASIZE);
 		
+		
+		intercalaArquivos("arquivo1.dat", "arquivo2.dat", "arquivo5.dat");
+		intercalaArquivos("arquivo3.dat", "arquivo4.dat", "arquivo6.dat");
+		intercalaArquivos("arquivo5.dat", "arquivo6.dat", "arquivo1.dat");
+		
 		for (int j=1; j<5; j++) {
 			arquivoTemporario = new ArquivoBinarioAcessoAleatorio(nomeArquivo + j + ".dat");
 			System.out.println("---------------" + nomeArquivo + j + "------------------");
 			arquivoTemporario.imprimirTodos();
 			System.out.println("--------------------------------------------------------");
 		}
-		
-		intercalaArquivos("arquivo1.dat", "arquivo2.dat", "arquivo5.dat");
-		intercalaArquivos("arquivo3.dat", "arquivo4.dat", "arquivo6.dat");
-		intercalaArquivos("arquivo5.dat", "arquivo6.dat", "arquivo1.dat");
-		
 	}
 
 	private static void imprimeVetor(VetorParaOrdenacao[] vetor) {
@@ -91,7 +91,7 @@ public class OrdenacaoExternaArquivo {
 				}
 				
 				
-			} while ((aluno1 != null && aluno1.getMatricula() != -1) || (aluno2.getMatricula() != -1));
+			} while ((aluno1 != null && aluno1.getMatricula() != -1) || (aluno2 != null && aluno2.getMatricula() != -1));
 
 			
 			posicaoArquivo1++;
@@ -99,15 +99,7 @@ public class OrdenacaoExternaArquivo {
 			aluno1 = arquivo1.procurarAlunoPorPosicaoNoArquivo(posicaoArquivo1);
 			aluno2 = arquivo2.procurarAlunoPorPosicaoNoArquivo(posicaoArquivo2);
 			arquivoSaida.adicionarAlunoNoArquivo(new Aluno(";", -1L, -1.0));
-			i++;
-			if (i == 20)
-				System.out.println("PROCESSANDO");
-				
-			
 		} 
-		
-		System.out.println("ARQUIVO SAIDA");
-		arquivoSaida.imprimirTodos();
 		arquivo1.apagarArquivo();
 		arquivo2.apagarArquivo();
 	}
