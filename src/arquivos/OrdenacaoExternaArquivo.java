@@ -22,7 +22,6 @@ public class OrdenacaoExternaArquivo {
 			arquivoTemporario = new ArquivoBinarioAcessoAleatorio(nomeArquivo + quantidadeDeArquivos + ".dat", false);
 			while (aindaExisteMaior(vetor)) {
 				vetor = preencheVetorCompleto(vetor, arquivo);
-				//imprimeVetor(vetor);
 				vetor = colocaMenorEncontradoNoArquivoAberto(arquivoTemporario, vetor);
 			}
 	
@@ -40,16 +39,52 @@ public class OrdenacaoExternaArquivo {
 		
 		intercalaArquivos("arquivo1.dat", "arquivo2.dat", "arquivo5.dat");
 		intercalaArquivos("arquivo3.dat", "arquivo4.dat", "arquivo6.dat");
-		intercalaArquivos("arquivo5.dat", "arquivo6.dat", "arquivo1.dat");
+		intercalaArquivos("arquivo5.dat", "arquivo6.dat", "arquivo3.dat");
 		
-		for (int j=1; j<5; j++) {
-			arquivoTemporario = new ArquivoBinarioAcessoAleatorio(nomeArquivo + j + ".dat");
-			System.out.println("---------------" + nomeArquivo + j + "------------------");
-			arquivoTemporario.imprimirTodos();
-			System.out.println("--------------------------------------------------------");
+		
+		boolean ePossivelRedividirMais = true;
+		while(ePossivelRedividirMais) {
+			ePossivelRedividirMais = redivisaoArquivos("arquivo3.dat");
 		}
 	}
 
+	private static boolean redivisaoArquivos(String nomeArquivo) {
+		ArquivoBinarioAcessoAleatorio arquivo1 = new ArquivoBinarioAcessoAleatorio(nomeArquivo);
+		ArquivoBinarioAcessoAleatorio arquivoTemporario;
+		String nomesArquivosTemporario = "arqTemp";
+		int posicao = 1;
+		int quantidadeDeArquivos = 1, arquivosNecessarios = 0;
+		Aluno aluno = arquivo1.procurarAlunoPorPosicaoNoArquivo(0);
+		
+		while (aluno != null) {
+			arquivoTemporario = new ArquivoBinarioAcessoAleatorio(nomesArquivosTemporario + quantidadeDeArquivos + ".dat", false);
+			arquivosNecessarios++;
+			while (aluno.getMatricula() != -1) {
+				arquivoTemporario.adicionarAlunoNoArquivo(aluno);
+				posicao++;
+				aluno = arquivo1.procurarAlunoPorPosicaoNoArquivo(posicao);				
+			}
+			
+			arquivoTemporario.adicionarAlunoNoArquivo(new Aluno(";", -1L, -1));
+			posicao++;
+			aluno = arquivo1.procurarAlunoPorPosicaoNoArquivo(posicao);	
+			if (quantidadeDeArquivos == quantidadeTotalDeArquivos) {
+				quantidadeDeArquivos = 1;
+				
+			} else
+				quantidadeDeArquivos++;
+		}
+		intercalaArquivos("arqTemp1.dat", "arqTemp2.dat", "arquivo1.dat");
+		intercalaArquivos("arqTemp3.dat", "arqTemp4.dat", "arquivo2.dat");
+		intercalaArquivos("arquivo1.dat", "arquivo2.dat", "arquivo3.dat");			
+		if (arquivosNecessarios > 1) {
+			return true;
+		}
+		
+		return false;
+		
+	}
+	
 	private static void imprimeVetor(VetorParaOrdenacao[] vetor) {
 		System.out.println("-------------------------------------");
 		for(int i=0; i<TAMANHO_VETOR; i++) {
@@ -104,6 +139,13 @@ public class OrdenacaoExternaArquivo {
 		arquivo2.apagarArquivo();
 	}
 
+	private static boolean temSoUmBloco(String nome) {
+		ArquivoBinarioAcessoAleatorio arquivo = new ArquivoBinarioAcessoAleatorio(nome);
+		if (arquivo.getQuantidadeBlocos() == 1)
+			return true;
+		return false;
+	}
+	
 	private static VetorParaOrdenacao[] retiraAsteriscosDoVetor(VetorParaOrdenacao[] vetor) {
 		for (int i=0; i<TAMANHO_VETOR; i++) {
 			vetor[i].setMenor(false);

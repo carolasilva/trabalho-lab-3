@@ -47,7 +47,7 @@ public class ArquivoBinarioAcessoAleatorio {
 			this.arquivoAcessoAleatorio.close();
 			
 		} catch (IOException e) {
-			System.out.println("Erro com o arquivo: " + e.getMessage());
+			//System.out.println("Erro com o arquivo: " + e.getMessage());
 		}
 		
 	}
@@ -68,9 +68,37 @@ public class ArquivoBinarioAcessoAleatorio {
 	        this.arquivoAcessoAleatorio.close(); 
 	        return aluno;
 		} catch (IOException e) {
-			System.out.println("Erro com o arquivo: " + e.getMessage());
+			//System.out.println("Erro com o arquivo: " + e.getMessage());
 		}
 		return null;
+	}
+	
+	public int getQuantidadeBlocos() {
+		int quantidade = 0;
+		try {
+			this.arquivoAcessoAleatorio = new RandomAccessFile(arquivo, "r");
+			Aluno aluno = null;
+			quantidade = 0;
+	        try{
+	        	for(int i=0; i<arquivo.length(); ) {
+	        		this.arquivoAcessoAleatorio.seek(i * Aluno.DATASIZE);
+	        		aluno = Aluno.readData(this.arquivoAcessoAleatorio);  
+	        		if (aluno.getMatricula() == -1)
+	        			quantidade++;
+	        		i ++;
+	        	}
+	        	
+	        	return quantidade;
+	        }
+	        catch(EOFException e){  //para quando terminar os dados do arquivo
+	        	aluno = null;
+	        	return quantidade;
+	        } 
+		} catch (IOException e) {
+			System.out.println("Erro com o arquivo: " + e.getMessage());
+		}
+		
+		return quantidade;
 	}
 	
 	public void imprimirTodos () {
