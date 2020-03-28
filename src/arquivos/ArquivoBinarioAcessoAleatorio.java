@@ -59,6 +59,29 @@ public class ArquivoBinarioAcessoAleatorio {
 		}
 		return null;
 	}
+	
+	public void imprimirTodos () {
+		try {
+			this.arquivoAcessoAleatorio = new RandomAccessFile(arquivo, "r");
+			Aluno aluno = null;
+			
+	        try{
+	        	for(int i=0; i<arquivo.length(); ) {
+	        		this.arquivoAcessoAleatorio.seek(i * Aluno.DATASIZE);
+	        		aluno = Aluno.readData(this.arquivoAcessoAleatorio);  
+	        		System.out.println(aluno);
+	        		i ++;
+	        	}
+	        }
+	        catch(EOFException e){  //para quando terminar os dados do arquivo
+	        	aluno = null;
+	        }
+	        
+	        this.arquivoAcessoAleatorio.close(); 
+		} catch (IOException e) {
+			System.out.println("Erro com o arquivo: " + e.getMessage());
+		}
+	}
 
 	public ArquivoIndice getArquivoIndice() {
 		return arquivoIndice;

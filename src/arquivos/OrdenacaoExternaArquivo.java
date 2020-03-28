@@ -14,37 +14,91 @@ public class OrdenacaoExternaArquivo {
 		vetor = preencheVetorCompleto(vetor, arquivo);
 		String nomeArquivo = "arquivo";
 		int quantidadeDeArquivos = 1;
-		ArquivoOrdenado arquivoTemporario;
-		int i = 0;
+		ArquivoBinarioAcessoAleatorio arquivoTemporario;
 		
 		do {
 
-			arquivoTemporario = new ArquivoOrdenado(nomeArquivo + quantidadeDeArquivos + ".dat");
+			arquivoTemporario = new ArquivoBinarioAcessoAleatorio(nomeArquivo + quantidadeDeArquivos + ".dat");
 			while (aindaExisteMaior(vetor)) {
 				vetor = preencheVetorCompleto(vetor, arquivo);
+				imprimeVetor(vetor);
 				vetor = colocaMenorEncontradoNoArquivoAberto(arquivoTemporario, vetor);
 			}
 	
-			arquivoTemporario.add(new Aluno(";", -1L, -1.0));
+			arquivoTemporario.adicionarAlunoNoArquivo(new Aluno(";", -1L, -1));
 			ultimoColocadoNoArquivo = null;
 			if (quantidadeDeArquivos == quantidadeTotalDeArquivos) {
 				quantidadeDeArquivos = 1;
 				
 			} else
 				quantidadeDeArquivos++;
-			System.out.println("LENGTH: " + arquivo.arquivo.length());
-			System.out.println("LENGTH DO NOSSO: " + posicaoNoArquivoOriginal * Aluno.DATASIZE);
 			vetor = retiraAsteriscosDoVetor(vetor);
 			
 		} while (arquivo.arquivo.length() > posicaoNoArquivoOriginal * Aluno.DATASIZE);
 		
-		
 		for (int j=1; j<5; j++) {
-			arquivoTemporario = new ArquivoOrdenado(nomeArquivo + j + ".dat");
+			arquivoTemporario = new ArquivoBinarioAcessoAleatorio(nomeArquivo + j + ".dat");
 			System.out.println("---------------" + nomeArquivo + j + "------------------");
-			arquivoTemporario.imprimeTodos();
+			arquivoTemporario.imprimirTodos();
 			System.out.println("--------------------------------------------------------");
 		}
+		
+		arquivoTemporario = new ArquivoBinarioAcessoAleatorio("arquivo1.dat");
+		System.out.println("ALUNO 3 DO ARQUIVO 1: " + arquivoTemporario.procurarAlunoPorPosicaoNoArquivo(10));
+		
+		//intercalaArquivos("arquivo1.dat", "arquivo2.dat", "arquivo5.dat");
+		
+	}
+
+	private static void imprimeVetor(VetorParaOrdenacao[] vetor) {
+		System.out.println("-------------------------------------");
+		for(int i=0; i<TAMANHO_VETOR; i++) {
+			if (vetor[i].getAluno() != null) {
+				boolean temAsterisco = vetor[i].isMenor();
+				String asterisco = "";
+				if (temAsterisco)
+					asterisco = "*";
+				System.out.println(vetor[i].getNome() + ": " + asterisco);
+				
+			} else
+				System.out.println("nulo");
+		}
+		
+	}
+
+	private static void intercalaArquivos(String nomeArquivo1, String nomeArquivo2, String nomeArquivoSaida) {
+		ArquivoOrdenado arquivo1 = new ArquivoOrdenado(nomeArquivo1);
+		ArquivoOrdenado arquivo2 = new ArquivoOrdenado(nomeArquivo2);
+		ArquivoOrdenado arquivoSaida = new ArquivoOrdenado(nomeArquivoSaida);
+		
+		Aluno aluno1 = arquivo1.buscaPorPosicao(0);
+		Aluno aluno2 = arquivo2.buscaPorPosicao(0);
+		
+		Aluno alunoAntigo1 = aluno1;
+		Aluno alunoAntigo2 = aluno2;
+		
+		do {
+			do {
+				
+				if (aluno1.getNome().compareTo(aluno2.getNome()) < 0 && (aluno1.getMatricula() != -1)) {
+					alunoAntigo1 = aluno1;
+					arquivoSaida.add(aluno1);
+					aluno1 = arquivo1.buscaProximo(alunoAntigo1);
+				} else if (aluno2.getMatricula() != -1){
+					alunoAntigo2 = aluno2;
+					arquivoSaida.add(aluno2);
+					aluno2 = arquivo2.buscaProximo(alunoAntigo2);
+				}
+				
+				
+			} while (aluno1.getMatricula() != -1 && aluno2.getMatricula() != -1);
+
+			arquivoSaida.add(new Aluno(";", -1L, -1.0));
+			
+		} while (aluno1 != null && aluno2 != null);
+		
+		System.out.println("ARQUIVO SAIDA");
+		arquivoSaida.imprimeTodos();
 	}
 
 	private static VetorParaOrdenacao[] retiraAsteriscosDoVetor(VetorParaOrdenacao[] vetor) {
@@ -67,14 +121,12 @@ public class OrdenacaoExternaArquivo {
 		return vetor;
 	}
 
-	private static VetorParaOrdenacao[] colocaMenorEncontradoNoArquivoAberto(ArquivoOrdenado arquivo1, VetorParaOrdenacao[] vetor) {
+	private static VetorParaOrdenacao[] colocaMenorEncontradoNoArquivoAberto(ArquivoBinarioAcessoAleatorio arquivo1, VetorParaOrdenacao[] vetor) {
 		VetorParaOrdenacao menor = null;
 		
 		String ultimo = "";
 		if (ultimoColocadoNoArquivo != null)
 			ultimo = ultimoColocadoNoArquivo.getNome();
-		if (ultimo.equals("Rosa R L Araujo"))
-			System.out.println("COLE");
 		
 		for (int i=0; i<TAMANHO_VETOR; i++) {
 			if (vetor[i] != null && vetor[i].getAluno() != null) {
@@ -91,7 +143,7 @@ public class OrdenacaoExternaArquivo {
 		}
 		
 		if (menor != null) {
-			arquivo1.add(menor.getAluno());
+			arquivo1.adicionarAlunoNoArquivo(menor.getAluno());
 			ultimoColocadoNoArquivo = menor.getAluno();
 			vetor = apagaAlunoAdicionadoNoArquivoDoVetor(vetor, menor);			
 		}

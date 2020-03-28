@@ -19,7 +19,6 @@ public class Application {
 			arquivoBinario = new ArquivoBinarioAcessoAleatorio("alunos.dat");
 		}
 		
-		
 		int opcao = 2;
 		Scanner leitor = new Scanner(System.in);
 		Aluno aluno;
